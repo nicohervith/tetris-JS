@@ -1,159 +1,116 @@
 //Función nativa de p5 js
-const MARGEN_TABLERO = 20;
+const MARGEN_TABLERO = 10;
 let regulador_velocidad_teclas = 0;
+let regulador_de_caida = 0;
+let lineas_hechas = 0;
+
+/* 
+        Generación de fondo dinámico
+        */
+let angulo_fondo = Math.random() * 360;
+let tono_fondo = Math.random() * 360;
+setInterval(() => {
+  document.body.style.background = `linear-gradient(
+                ${angulo_fondo}deg, 
+                hsl(${tono_fondo},100%,50%),
+                hsl(${tono_fondo},100%,0%)
+            )`;
+  angulo_fondo += Math.random();
+  tono_fondo += Math.random();
+}, 20);
+
+/* 
+        Dificultad, hacer caer las piezas cada determinada cantidad de tiempo,
+        simulando una especie de gravedad, esto se hace fácilmente con un setInterval
+        */
+setInterval(() => {
+  if (millis() - regulador_de_caida < 300) {
+    return;
+  }
+  regulador_de_caida = millis();
+  tetrimino.moverAbajo();
+}, 500);
+
+/* 
+        La función setup es nativa de p5.js
+        y sirve para ajustar las propiedades iniciales de nuestros objetos 
+        y variables
+        */
 function setup() {
-  createCanvas(900, 600);
+  createCanvas(900, 600); //crea un canvas
+  /* 
+            VARIABLES GLOBALES
+            es importante que no le pongan let, ni var, ni const a las siguientes 
+            variables. Para que puedan ser identificadas como globales
+            */
   tablero = new Tablero();
   crearMapeo();
   tetrimino = new Tetrimino();
   resizeCanvas(
     tablero.ancho + 2 * MARGEN_TABLERO,
-    tablero.alto + 2 * MARGEN_TABLERO + tablero.lado_celda
+    tablero.alto + 2 * MARGEN_TABLERO + 2 * tablero.lado_celda
   );
 }
 
-function keyEventsTetris() {
-  if (millis() - regulador_velocidad_teclas < 150) {
-    return;
-  }
-  regulador_velocidad_teclas = millis();
-  if (keyIsDown(RIGHT_ARROW)) {
-    tetrimino.moverDerecha();
-  }
-  if (keyIsDown(LEFT_ARROW)) {
-    tetrimino.moverIzquierda();
-  }
-  if (keyIsDown(DOWN_ARROW)) {
-    tetrimino.moverAbajo();
-  }
-  if (keyIsDown(UP_ARROW)) {
-    tetrimino.moverArriba();
-  }
-}
-
+/* 
+        La función draw es nativa de p5.js
+        y sirve para dar instrucciones precisas de dibujo sobre el canvas
+        */
 function draw() {
-  background("lightgray");
+  clear();
+ // dibuajarPuntaje();
   tablero.dibujar();
   tetrimino.dibujar();
   keyEventsTetris();
 }
-
-function crearMapeo() {
-  tetriminosBase = {
-    Z: {
-      color: "red",
-      mapa: [
-        createVector(),
-        createVector(-1, -1),
-        createVector(0, -1),
-        createVector(1, 0),
-      ],
-    },
-    S: {
-      color: "lime",
-      mapa: [
-        createVector(),
-        createVector(1, -1),
-        createVector(0, -1),
-        createVector(-1, 0),
-      ],
-    },
-    J: {
-      color: "orange",
-      mapa: [
-        createVector(),
-        createVector(-1, 0),
-        createVector(-1, -1),
-        createVector(1, 0),
-      ],
-    },
-    L: {
-      color: "dodgerblue",
-      mapa: [
-        createVector(),
-        createVector(-1, 0),
-        createVector(1, -1),
-        createVector(1, 0),
-      ],
-    },
-    T: {
-      color: "magenta",
-      mapa: [
-        createVector(),
-        createVector(-1, 0),
-        createVector(1, 0),
-        createVector(0, -1),
-      ],
-    },
-    O: {
-      color: "yellow",
-      mapa: [
-        createVector(),
-        createVector(0, -1),
-        createVector(1, -1),
-        createVector(1, 0),
-      ],
-    },
-    I: {
-      color: "cyan",
-      mapa: [
-        createVector(),
-        createVector(-1, 0),
-        createVector(1, 0),
-        createVector(2, 0),
-      ],
-    },
-  };
+/*
+function dibuajarPuntaje() {
+  push();
+  textSize(20);
+  strokeWeight(2);
+  stroke("black");
+  fill("white");
+  text(
+    "Líneas: " + lineas_hechas,
+    tablero.posición.x,
+    tablero.posición.y - tablero.lado_celda / 2
+  );
+  pop();
 }
-class Tetrimino {
-  constructor(nombre = "Z") {
-    this.nombre = nombre;
-    let tetriminoBase = tetriminosBase[nombre];
-    this.color = tetriminoBase.color;
-    this.mapa = [];
+*/
 
-    for (const pmino of tetriminoBase.mapa) {
-      this.mapa.push(pmino.copy());
-    }
-    this.posicion = createVector(int(tablero.columna / 2), 0);
-  }
-  moverDerecha() {
-    this.posicion.x++;
-  }
-  moverIzquierda() {
-    this.posicion.x--;
-  }
-  moverArriba() {
-    this.posicion.y--;
-  }
-  moverAbajo() {
-    this.posicion.y++;
-  }
+let límite_regulador_velocidad_teclas = 100;
 
-  get mapaTablero() {
-    let retorno = [];
-    for (const pmino of this.mapa) {
-      let copy = pmino.copy().add(this.posicion);
-      retorno.push(tablero.coordenada(copy.x, copy.y));
-    }
-    return retorno;
+function keyEventsTetris() {
+  if (
+    millis() - regulador_velocidad_teclas <
+    límite_regulador_velocidad_teclas
+  ) {
+    return;
   }
+  límite_regulador_velocidad_teclas = 100;
+  regulador_velocidad_teclas = millis();
 
-  dibujar() {
-    push();
-    fill(this.color);
-    for (const pmino of this.mapaTablero) {
-      rect(pmino.x, pmino.y, tablero.lado_celda);
-      push();
-      noStroke();
-      fill(255, 255, 255, 80);
-      beginShape();
-      vertex(pmino.x, pmino.y);
-      vertex(pmino.x, pmino.y + this.lado_celda);
-      vertex(pmino.x + this.lado_celda, pmino.y);
-      endShape(CLOSE);
-      pop();
-    }
-    pop();
+  if (keyIsDown(RIGHT_ARROW)) {
+    tetrimino.moverDerecha();
+    regulador_de_caida = millis();
+  }
+  if (keyIsDown(LEFT_ARROW)) {
+    tetrimino.moverIzquierda();
+    regulador_de_caida = millis();
+  }
+  if (keyIsDown(DOWN_ARROW)) {
+    tetrimino.moverAbajo();
+    regulador_de_caida = millis();
+  }
+  if (keyIsDown(UP_ARROW)) {
+    límite_regulador_velocidad_teclas = 150;
+    tetrimino.girar();
+    regulador_de_caida = millis();
+  }
+  if (keyIsDown(32)) {
+    límite_regulador_velocidad_teclas = 200;
+    tetrimino.ponerEnElFondo();
+    regulador_de_caida = millis();
   }
 }
