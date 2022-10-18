@@ -9,8 +9,6 @@ let lineas_hechas = 0;
 let angulo_fondo = Math.random() * 360;
 let tono_fondo = Math.random() * 360;
 
-
-
 /* 
         Dificultad, hacer caer las piezas cada determinada cantidad de tiempo,
         simulando una especie de gravedad, esto se hace fácilmente con un setInterval
@@ -70,16 +68,16 @@ function dibujarPuntaje() {
   pop();
 }
 
-let límite_regulador_velocidad_teclas = 100;
+let limite_regulador_velocidad_teclas = 100;
 
 function keyEventsTetris() {
   if (
     millis() - regulador_velocidad_teclas <
-    límite_regulador_velocidad_teclas
+    limite_regulador_velocidad_teclas
   ) {
     return;
   }
-  límite_regulador_velocidad_teclas = 100;
+  limite_regulador_velocidad_teclas = 100;
   regulador_velocidad_teclas = millis();
 
   if (keyIsDown(RIGHT_ARROW)) {
@@ -95,12 +93,12 @@ function keyEventsTetris() {
     regulador_de_caida = millis();
   }
   if (keyIsDown(UP_ARROW)) {
-    límite_regulador_velocidad_teclas = 150;
+    limite_regulador_velocidad_teclas = 150;
     tetrimino.girar();
     regulador_de_caida = millis();
   }
   if (keyIsDown(32)) {
-    límite_regulador_velocidad_teclas = 200;
+    limite_regulador_velocidad_teclas = 200;
     tetrimino.ponerEnElFondo();
     regulador_de_caida = millis();
   }

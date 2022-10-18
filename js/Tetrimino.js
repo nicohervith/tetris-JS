@@ -63,7 +63,7 @@ class Tetrimino {
 
   get movimientoErroneo() {
     let fueraDelTablero = !this.dentroDelTablero;
-    return fueraDelTablero || this.colisiónConMinosAlmacenados;
+    return fueraDelTablero || this.colisionMinos;
   }
 
   get colisionMinos() {
