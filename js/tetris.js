@@ -1,4 +1,3 @@
-//Función nativa de p5 js
 const MARGEN_TABLERO = 10;
 let regulador_velocidad_teclas = 0;
 let regulador_de_caida = 0;
@@ -9,15 +8,8 @@ let lineas_hechas = 0;
         */
 let angulo_fondo = Math.random() * 360;
 let tono_fondo = Math.random() * 360;
-setInterval(() => {
-  document.body.style.background = `linear-gradient(
-                ${angulo_fondo}deg, 
-                hsl(${tono_fondo},100%,50%),
-                hsl(${tono_fondo},100%,0%)
-            )`;
-  angulo_fondo += Math.random();
-  tono_fondo += Math.random();
-}, 20);
+
+
 
 /* 
         Dificultad, hacer caer las piezas cada determinada cantidad de tiempo,
@@ -58,13 +50,13 @@ function setup() {
         */
 function draw() {
   clear();
- // dibuajarPuntaje();
+  dibujarPuntaje();
   tablero.dibujar();
   tetrimino.dibujar();
   keyEventsTetris();
 }
-/*
-function dibuajarPuntaje() {
+
+function dibujarPuntaje() {
   push();
   textSize(20);
   strokeWeight(2);
@@ -72,12 +64,11 @@ function dibuajarPuntaje() {
   fill("white");
   text(
     "Líneas: " + lineas_hechas,
-    tablero.posición.x,
-    tablero.posición.y - tablero.lado_celda / 2
+    tablero.posicion.x,
+    tablero.posicion.y - tablero.lado_celda / 2
   );
   pop();
 }
-*/
 
 let límite_regulador_velocidad_teclas = 100;
 

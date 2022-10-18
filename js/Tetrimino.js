@@ -7,25 +7,25 @@ class Tetrimino {
     for (const pmino of base.mapa) {
       this.mapa.push(pmino.copy());
     }
-    this.posición = createVector(int(tablero.columnas / 2), -1);
+    this.posicion = createVector(int(tablero.columnas / 2), -1);
   }
 
   moverDerecha() {
-    this.posición.x++;
+    this.posicion.x++;
     if (this.movimientoErroneo) {
       this.moverIzquierda();
     }
   }
 
   moverIzquierda() {
-    this.posición.x--;
+    this.posicion.x--;
     if (this.movimientoErroneo) {
       this.moverDerecha();
     }
   }
 
   moverAbajo() {
-    this.posición.y++;
+    this.posicion.y++;
     if (this.movimientoErroneo) {
       this.moverArriba();
       if (tetrimino == this) {
@@ -38,11 +38,11 @@ class Tetrimino {
   }
 
   moverArriba() {
-    this.posición.y--;
+    this.posicion.y--;
   }
 
   ponerEnElFondo() {
-    this.posición = this.espectro.posición;
+    this.posicion = this.espectro.posicion;
     this.moverAbajo();
   }
 
@@ -62,11 +62,11 @@ class Tetrimino {
   }
 
   get movimientoErroneo() {
-    let salióDelTablero = !this.estáDentroDelTablero;
-    return salióDelTablero || this.colisiónConMinosAlmacenados;
+    let fueraDelTablero = !this.dentroDelTablero;
+    return fueraDelTablero || this.colisiónConMinosAlmacenados;
   }
 
-  get colisiónConMinosAlmacenados() {
+  get colisionMinos() {
     for (const pmino of this.mapaTablero) {
       if (tablero.minosAlmacenados[pmino.x][pmino.y]) {
         return true;
@@ -75,7 +75,7 @@ class Tetrimino {
     return false;
   }
 
-  get estáDentroDelTablero() {
+  get dentroDelTablero() {
     for (const pmino of this.mapaTablero) {
       if (pmino.x < 0) {
         //Evita salida por izquierda
@@ -96,7 +96,7 @@ class Tetrimino {
   get mapaTablero() {
     let retorno = [];
     for (const pmino of this.mapa) {
-      let copy = pmino.copy().add(this.posición);
+      let copy = pmino.copy().add(this.posicion);
       retorno.push(copy);
     }
     return retorno;
@@ -105,7 +105,7 @@ class Tetrimino {
   get mapaCanvas() {
     let retorno = [];
     for (const pmino of this.mapa) {
-      let copy = pmino.copy().add(this.posición);
+      let copy = pmino.copy().add(this.posicion);
       retorno.push(tablero.coordenada(copy.x, copy.y));
     }
     return retorno;
@@ -129,7 +129,7 @@ class Tetrimino {
 
   dibujarEspectro() {
     this.espectro = new Tetrimino(this.nombre);
-    this.espectro.posición = this.posición.copy();
+    this.espectro.posicion = this.posicion.copy();
     for (let i = 0; i < this.mapa.length; i++) {
       this.espectro.mapa[i] = this.mapa[i].copy();
     }
