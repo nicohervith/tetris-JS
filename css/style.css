@@ -1,0 +1,31 @@
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: url("https://t3.ftcdn.net/jpg/02/96/58/56/360_F_296585661_rCaiPkhfSMLwNJ6dSGsUssblwb5rrU9Z.jpg");
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-attachment: fixed;
+      background-size: cover;
+    }
+
+    canvas {
+      filter: drop-shadow(5px 5px 2px rgba(0, 0, 0, 0.4));
+    }
+.container-button{
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  bottom: 0;
+  margin: auto;
+}
+.container-button img{
+  width: 20px;
+  height: 20px;
+}
+.container-button button{
+  padding:7px;
+}

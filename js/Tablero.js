@@ -58,6 +58,7 @@ class Tablero {
 
   borrarLineasHorizontales(lineas) {
     lineas_hechas += lineas.length;
+    
     for (const linea of lineas) {
       for (let fila = linea; fila >= 0; fila--) {
         for (let columna = 0; columna < this.columnas; columna++) {
@@ -93,9 +94,9 @@ class Tablero {
     for (let columna = 0; columna < this.columnas; columna++) {
       for (let fila = 0; fila < this.filas; fila++) {
         if ((columna + fila) % 2 == 0) {
-          fill("black");
+          fill("white");
         } else {
-          fill("#003");
+          fill("lightgray");
         }
         let c = this.coordenada(columna, fila);
         rect(c.x, c.y, this.lado_celda);

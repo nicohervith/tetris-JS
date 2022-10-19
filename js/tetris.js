@@ -2,6 +2,15 @@ const MARGEN_TABLERO = 10;
 let regulador_velocidad_teclas = 0;
 let regulador_de_caida = 0;
 let lineas_hechas = 0;
+let pausado = false;
+let puedeJugar = true;
+
+const $btnPausar = document.querySelector("#btnPausar"),
+  $btnIniciar = document.querySelector("#btnIniciar"),
+  $btnRotar = document.querySelector("#btnRotar"),
+  $btnAbajo = document.querySelector("#btnAbajo"),
+  $btnDerecha = document.querySelector("#btnDerecha"),
+  $btnIzquierda = document.querySelector("#btnIzquierda");
 
 /* 
         Generación de fondo dinámico
@@ -48,11 +57,12 @@ function setup() {
         */
 function draw() {
   clear();
+  iniciarJuego();
   dibujarPuntaje();
   tablero.dibujar();
   tetrimino.dibujar();
   keyEventsTetris();
-}
+  }
 
 function dibujarPuntaje() {
   push();
@@ -67,6 +77,49 @@ function dibujarPuntaje() {
   );
   pop();
 }
+
+const iniciarJuego = () => {
+  pausado = false;
+  puedeJugar = true;
+  // idInterval = setInterval(loop, regulador_de_caida);
+};
+
+const pausar = () => {
+  pausado = true;
+  puedeJugar = false;
+  // clearInterval(idInterval);
+};
+
+const pausarOReanudar = () => {
+  if (pausado) {
+    iniciarJuego();
+    $btnIniciar.hidden = true;
+    $btnPausar.hidden = false;
+  } else {
+    pausar();
+    $btnIniciar.hidden = false;
+    $btnPausar.hidden = true;
+  }
+};
+
+//let idInterval;
+const loop = () => {
+  if (!puedeJugar) {
+    return;
+  }
+};
+
+document.addEventListener("keydown", (e) => {
+  const { code } = e;
+  if (!puedeJugar && code !== "KeyP") {
+    return;
+  }
+  switch (code) {
+    case "KeyP":
+      pausarOReanudar();
+      break;
+  }
+});
 
 let limite_regulador_velocidad_teclas = 100;
 
@@ -102,4 +155,25 @@ function keyEventsTetris() {
     tetrimino.ponerEnElFondo();
     regulador_de_caida = millis();
   }
+}
+
+function buttonEvents (){
+$btnAbajo.addEventListener("click", () => {
+  tetrimino.moverAbajo();
+});
+this.$btnDerecha.addEventListener("click", () => {
+  tetrimino.moverDerecha();
+
+});
+$btnIzquierda.addEventListener("click", () => {
+  if (!puedeJugar) return;
+  moverIzquierda();
+});
+$btnRotar.addEventListener("click", () => {
+  if (!puedeJugar) return;
+  girar();
+});
+[$btnPausar, $btnIniciar].forEach(($btn) =>
+  $btn.addEventListener("click", pausarOReanudar)
+);
 }
